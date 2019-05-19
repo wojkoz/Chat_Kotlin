@@ -4,6 +4,6 @@ import retrofit2.Call
 import retrofit2.http.GET
 
 interface MessageService {
-    @GET("messages")
-    fun getMessages() : Call<MessageResponse>
+    @GET("messages?")
+    fun getMessages() : Call<List<Message>>
 }
