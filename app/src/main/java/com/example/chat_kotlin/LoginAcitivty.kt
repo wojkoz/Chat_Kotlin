@@ -1,19 +1,16 @@
 package com.example.chat_kotlin
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.view.View
-import android.widget.EditText
-import kotlinx.android.synthetic.main.activity_first_login_acitivty.*
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginAcitivty : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_first_login_acitivty)
+        setContentView(R.layout.activity_login)
         set_login.setOnClickListener {
                 setSharedPrefLogin()
             }

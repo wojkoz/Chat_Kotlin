@@ -11,9 +11,15 @@ import android.support.design.widget.NavigationView
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
+import com.example.chat_kotlin.Network.MessageResponse
+import com.example.chat_kotlin.Network.MessageService
+import kotlinx.android.synthetic.main.content_main.*
+import retrofit2.*
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var userLogin: String? = ""
+    private val BaseUrl = "http://tgryl.pl/shoutbox/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +45,38 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val intent = Intent(this, LoginAcitivty::class.java)
             startActivity(intent)
         }
+        getNewMessages()
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val sharedPref = getSharedPreferences(R.string.FILE_KEY.toString(), Context.MODE_PRIVATE) ?: return
+        userLogin = sharedPref.getString(R.string.LOGIN_KEY.toString(), null )
+    }
+
+    private fun getNewMessages(){
+        val retrofit = Retrofit.Builder()
+            .baseUrl(BaseUrl)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service = retrofit.create(MessageService::class.java)
+        val call = service.getMessages()
+
+        call.enqueue(object : Callback<MessageResponse>{
+            override fun onResponse(call: Call<MessageResponse>, response: Response<MessageResponse>) {
+                if(response.code() == 200){
+                    val messageResponse = response.body()
+                    val s : String? = messageResponse?.response?.get(0)?.content.toString()
+                    textView3.text = s
+                }
+            }
+
+            override fun onFailure(call: Call<MessageResponse>, t: Throwable) {
+                    textView3.text = "nie dziala"
+            }
+        })
     }
 
     override fun onBackPressed() {
