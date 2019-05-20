@@ -9,17 +9,20 @@ import android.view.MenuItem
 import android.support.v4.widget.DrawerLayout
 import android.support.design.widget.NavigationView
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import com.example.chat_kotlin.Network.Message
 import com.example.chat_kotlin.Network.MessageService
+import com.example.chat_kotlin.recycler.RecyclerAdapter
 import kotlinx.android.synthetic.main.content_main.*
 import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var userLogin: String? = ""
-    private val BaseUrl = "http://tgryl.pl/shoutbox/"
+    lateinit var recyclerView: RecyclerView
+    lateinit var recyclerAdapter: RecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +48,8 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             val intent = Intent(this, LoginAcitivty::class.java)
             startActivity(intent)
         }
+
+
         getNewMessages()
 
     }
@@ -57,25 +62,25 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun getNewMessages(){
-        val retrofit = Retrofit.Builder()
-            .baseUrl(BaseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        recyclerView = findViewById(R.id.recyclerview)
+        recyclerAdapter = RecyclerAdapter(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = recyclerAdapter
 
-        val service = retrofit.create(MessageService::class.java)
+        val m = listOf<Message>(Message("ttt","234","3","sdf"), Message("ttt","234","3","sdf"), Message("ttt","234","3","sdf"))
+
+        val service = MessageService.create()
         val call = service.getMessages()
-
+        recyclerAdapter.setMessageListItems(m)
         call.enqueue(object : Callback<List<Message>>{
             override fun onResponse(call: Call<List<Message>>, response: Response<List<Message>>) {
                 if(response.code() == 200){
-                    val messageResponse = response.body()
-
-                    textView3.text = messageResponse?.get(0)?.content.toString()
+                   // recyclerAdapter.setMessageListItems(response.body()!!)
                 }
             }
 
             override fun onFailure(call: Call<List<Message>>, t: Throwable) {
-                    textView3.text = getString(R.string.error_retrofit_get)
+                    message.text = getString(R.string.error_retrofit_get)
             }
         })
     }
