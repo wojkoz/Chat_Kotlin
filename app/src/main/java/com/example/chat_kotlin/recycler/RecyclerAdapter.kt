@@ -15,7 +15,7 @@ class RecyclerAdapter(val context: Context) : RecyclerView.Adapter<RecyclerAdapt
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.content_main ,parent,false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.recyclerview_item ,parent,false)
         return MyViewHolder(view)
     }
 
@@ -25,7 +25,9 @@ class RecyclerAdapter(val context: Context) : RecyclerView.Adapter<RecyclerAdapt
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        holder.tvMovieName.text = messageList.get(position).content
+        holder.content.text = messageList[position].content
+        holder.login.text = messageList[position].login
+        holder.date.text = messageList[position].date
 
     }
 
@@ -36,7 +38,9 @@ class RecyclerAdapter(val context: Context) : RecyclerView.Adapter<RecyclerAdapt
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        val tvMovieName: TextView = itemView.findViewById(R.id.message)
+        val content: TextView = itemView.findViewById(R.id.user_content)
+        val login: TextView = itemView.findViewById(R.id.user_login)
+        val date: TextView = itemView.findViewById(R.id.user_date)
 
     }
 }

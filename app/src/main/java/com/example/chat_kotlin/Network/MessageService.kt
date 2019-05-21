@@ -6,12 +6,12 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 
 interface MessageService {
-    @GET("messages?")
+    @GET("messages")
     fun getMessages() : Call<List<Message>>
 
     companion object {
 
-        private val BaseUrl = "http://tgryl.pl/shoutbox/"
+        private const val BaseUrl = "http://tgryl.pl/shoutbox/"
 
         fun create() : MessageService{
             val retrofit = Retrofit.Builder()

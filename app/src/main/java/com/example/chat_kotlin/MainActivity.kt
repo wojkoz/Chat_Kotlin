@@ -67,20 +67,20 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = recyclerAdapter
 
-        val m = listOf<Message>(Message("ttt","234","3","sdf"), Message("ttt","234","3","sdf"), Message("ttt","234","3","sdf"))
 
         val service = MessageService.create()
         val call = service.getMessages()
-        recyclerAdapter.setMessageListItems(m)
+
+
         call.enqueue(object : Callback<List<Message>>{
             override fun onResponse(call: Call<List<Message>>, response: Response<List<Message>>) {
                 if(response.code() == 200){
-                   // recyclerAdapter.setMessageListItems(response.body()!!)
+                    recyclerAdapter.setMessageListItems(response.body()!!)
                 }
             }
 
             override fun onFailure(call: Call<List<Message>>, t: Throwable) {
-                    message.text = getString(R.string.error_retrofit_get)
+                    t.printStackTrace()
             }
         })
     }
