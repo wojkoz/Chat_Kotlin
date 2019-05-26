@@ -1,5 +1,6 @@
 package com.example.chat_kotlin
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -13,7 +14,12 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.Menu
-import com.example.chat_kotlin.Network.Message
+import android.view.View
+import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
+import com.example.chat_kotlin.Acitivites.LoginAcitivty
+import com.example.chat_kotlin.Model.Message
+import com.example.chat_kotlin.Model.SendMessageBody
 import com.example.chat_kotlin.Network.MessageService
 import com.example.chat_kotlin.recycler.RecyclerAdapter
 import kotlinx.android.synthetic.main.content_main.*
@@ -49,8 +55,41 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             startActivity(intent)
         }
 
+        recyclerView = recyclerview
+        recyclerAdapter = RecyclerAdapter(this)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = recyclerAdapter
 
         getNewMessages()
+
+        //send button listener
+        send_button.setOnClickListener{
+            sendNewMessage(input_message.text.toString())
+            input_message.text.clear()
+            input_message.clearFocus()
+            it.hideKeyboard()
+        }
+
+    }
+
+    fun View.hideKeyboard() {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm.hideSoftInputFromWindow(windowToken, 0)
+    }
+
+
+    private fun sendNewMessage(m: String ){
+            MessageService.create().createMessage(SendMessageBody(m, userLogin!!))
+                .enqueue(object : Callback<Message>{
+                    override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                        recyclerAdapter.addMessageItem(response.body()!!)
+                    }
+
+                    override fun onFailure(call: Call<Message>, t: Throwable) {
+                        Toast.makeText(applicationContext, t.message, Toast.LENGTH_LONG).show()
+                    }
+
+                })
 
     }
 
@@ -62,11 +101,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun getNewMessages(){
-        recyclerView = findViewById(R.id.recyclerview)
-        recyclerAdapter = RecyclerAdapter(this)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = recyclerAdapter
-
 
         val service = MessageService.create()
         val call = service.getMessages()

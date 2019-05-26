@@ -1,15 +1,11 @@
-package com.example.chat_kotlin.Network
+package com.example.chat_kotlin.Model
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Message(
+data class SendMessageBody(
     @SerializedName("content")
     val content: String,
-    @SerializedName("date")
-    val date: String,
-    @SerializedName("id")
-    val id: String,
     @SerializedName("login")
     val login: String
 )

@@ -1,8 +1,9 @@
-package com.example.chat_kotlin
+package com.example.chat_kotlin.Acitivites
 
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.chat_kotlin.R
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginAcitivty : AppCompatActivity() {
@@ -11,6 +12,7 @@ class LoginAcitivty : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
         set_login.setOnClickListener {
                 setSharedPrefLogin()
             }

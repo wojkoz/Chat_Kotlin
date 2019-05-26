@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import com.example.chat_kotlin.Network.Message
+import com.example.chat_kotlin.Model.Message
 import com.example.chat_kotlin.R
 
 class RecyclerAdapter(val context: Context) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
@@ -33,6 +33,10 @@ class RecyclerAdapter(val context: Context) : RecyclerView.Adapter<RecyclerAdapt
 
     fun setMessageListItems(messageList: List<Message>){
         this.messageList = messageList;
+        notifyDataSetChanged()
+    }
+    fun addMessageItem(mes: Message){
+        messageList.plusElement(mes)
         notifyDataSetChanged()
     }
 

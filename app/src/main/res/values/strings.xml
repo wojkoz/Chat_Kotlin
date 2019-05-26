@@ -22,4 +22,6 @@
     <string name="login">Login</string>
     <string name="set_login">Set login</string>
     <string name="error_retrofit_get">nie dziala</string>
+    <string name="message">Message</string>
+    <string name="send_button_chevron_right">send_button_chevron_right</string>
 </resources>
