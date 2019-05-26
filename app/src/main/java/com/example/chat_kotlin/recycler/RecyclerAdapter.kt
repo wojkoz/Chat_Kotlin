@@ -32,11 +32,17 @@ class RecyclerAdapter(val context: Context) : RecyclerView.Adapter<RecyclerAdapt
     }
 
     fun setMessageListItems(messageList: List<Message>){
-        this.messageList = messageList;
+        this.messageList = messageList
         notifyDataSetChanged()
     }
     fun addMessageItem(mes: Message){
         messageList.plusElement(mes)
+        notifyDataSetChanged()
+    }
+    fun updateMessage(message : Message){
+        messageList.forEach{
+            i -> if(i.id == message.id)  message
+        }
         notifyDataSetChanged()
     }
 

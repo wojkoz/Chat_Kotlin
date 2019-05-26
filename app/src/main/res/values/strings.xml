@@ -24,4 +24,7 @@
     <string name="error_retrofit_get">nie dziala</string>
     <string name="message">Message</string>
     <string name="send_button_chevron_right">send_button_chevron_right</string>
+    <string name="login_text">login</string>
+    <string name="content_text">data tat at atat at a</string>
+    <string name="content_text2">conetnefafdsdf sdf s fd sdf sf sd</string>
 </resources>

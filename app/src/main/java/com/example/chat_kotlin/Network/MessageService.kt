@@ -15,6 +15,9 @@ interface MessageService {
     @POST("message")
     fun createMessage( @Body m : SendMessageBody ) : Call<Message>
 
+    @PUT("message/{id}")
+    fun updateMessage(@Path("id") id : String, @Body m : SendMessageBody) : Call<Message>
+
     companion object {
 
         private const val BaseUrl = "http://tgryl.pl/shoutbox/"
