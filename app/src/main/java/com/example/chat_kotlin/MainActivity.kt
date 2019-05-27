@@ -85,12 +85,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             if(resultCode == Activity.RESULT_OK){
 
                 if(data?.getStringExtra("TYPE") == "UPDATE"){
-                    val id = data.getStringExtra("id")
+
                     val login = data.getStringExtra("login")
                     val content = data.getStringExtra("content")
+                    val id = data.getStringExtra("id")
+
                     updateOldMessage(id, SendMessageBody(content, login))
-                }else{
-                    val id = data?.getStringExtra("id")
+
+                }else if(data?.getStringExtra("TYPE") == "DELETE"){
+                    val id = data.getStringExtra("id")
                     deleteMessage(id!!)
                 }
             }
@@ -142,7 +145,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
     private fun updateOldMessage(i: String, body: SendMessageBody){
-            MessageService.create().updateMessage(i ,body)
+            MessageService.create().updateMessage(i, body)
                 .enqueue(object : Callback<Message>{
                     override fun onFailure(call: Call<Message>, t: Throwable) {
                         Log.w("update",t.message)
@@ -151,6 +154,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                     override fun onResponse(call: Call<Message>, response: Response<Message>) {
                         getNewMessages()
+                        Toast.makeText(this@MainActivity, "update DONE", Toast.LENGTH_LONG).show()
                     }
 
                 })

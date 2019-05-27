@@ -17,7 +17,7 @@ interface MessageService {
     fun createMessage( @Body m : SendMessageBody ) : Call<Message>
 
     @PUT("message/{id}")
-    fun updateMessage(@Path("id") id : String, @Body m : SendMessageBody) : Call<Message>
+    fun updateMessage(@Path("id") id : String, @Body m :SendMessageBody) : Call<Message>
 
     @DELETE("message/{id}")
     fun deleteMessage(@Path("id") id : String) : Call<DeletedMessage>
