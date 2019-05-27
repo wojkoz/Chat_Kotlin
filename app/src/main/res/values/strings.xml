@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Chat_kotlin</string>
+    <string name="app_name">Shoutbox</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -27,4 +27,17 @@
     <string name="login_text">login</string>
     <string name="content_text">data tat at atat at a</string>
     <string name="content_text2">conetnefafdsdf sdf s fd sdf sf sd</string>
+    <string name="edit_content">Edit content</string>
+    <string name="edit_login">Edit login</string>
+    <string name="edit_message">Edit message</string>
+    <string name="content">Content</string>
+    <string name="update">Update</string>
+    <string name="delete">Delete</string>
+    <string name="FILE_UPDATE_DELETE">UPDATE_DELETE</string>
+    <string name="Operation">Operation</string>
+    <string name="CONTENT_KEY">Content</string>
+    <string name="LOGIN_UPDATE_KEY">Login</string>
+    <string name="ID_KEY">ID</string>
+    <string name="Settings">Settings</string>
+    <string name="menu_shoutbox">Shoutbox</string>
 </resources>

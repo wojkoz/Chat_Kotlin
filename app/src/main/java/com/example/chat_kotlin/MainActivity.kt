@@ -1,5 +1,6 @@
 package com.example.chat_kotlin
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,17 +13,21 @@ import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
+import android.util.Log
 import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.example.chat_kotlin.Acitivites.EditMessageAcitivty
 import com.example.chat_kotlin.Acitivites.LoginAcitivty
+import com.example.chat_kotlin.Model.DeletedMessage
 import com.example.chat_kotlin.Model.Message
 import com.example.chat_kotlin.Model.SendMessageBody
 import com.example.chat_kotlin.Network.MessageService
 import com.example.chat_kotlin.recycler.RecyclerAdapter
 import kotlinx.android.synthetic.main.content_main.*
 import retrofit2.*
+import java.io.Serializable
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var userLogin: String? = ""
@@ -34,7 +39,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         setContentView(R.layout.activity_main)
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
-
 
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
@@ -55,7 +59,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
         recyclerView = recyclerview
-        recyclerAdapter = RecyclerAdapter(this)
+        recyclerAdapter = RecyclerAdapter { item -> itemClicked(item)}
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = recyclerAdapter
 
@@ -70,8 +74,40 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
 
     }
+    companion object{
+        const val UPDATE_DELETE_MESSAGE_REQ_CODE: Int = 1
+    }
 
-    fun View.hideKeyboard() {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if(requestCode == UPDATE_DELETE_MESSAGE_REQ_CODE){
+            if(resultCode == Activity.RESULT_OK){
+
+                if(data?.getStringExtra("TYPE") == "UPDATE"){
+                    val id = data.getStringExtra("id")
+                    val login = data.getStringExtra("login")
+                    val content = data.getStringExtra("content")
+                    updateOldMessage(id, SendMessageBody(content, login))
+                }else{
+                    val id = data?.getStringExtra("id")
+                    deleteMessage(id!!)
+                }
+            }
+        }
+    }
+
+    private fun itemClicked(Item : Message) {
+        Toast.makeText(this, "Clicked: ${Item.id}", Toast.LENGTH_LONG).show()
+        val intent = Intent(this, EditMessageAcitivty::class.java)
+        intent.putExtra("login", Item.login)
+        intent.putExtra("content", Item.content)
+        intent.putExtra("id", Item.id)
+        intent.putExtra("user_login", userLogin)
+        startActivityForResult(intent, UPDATE_DELETE_MESSAGE_REQ_CODE)
+    }
+
+    private fun View.hideKeyboard() {
         val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         imm.hideSoftInputFromWindow(windowToken, 0)
     }
@@ -81,7 +117,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             MessageService.create().createMessage(SendMessageBody(m, userLogin!!))
                 .enqueue(object : Callback<Message>{
                     override fun onResponse(call: Call<Message>, response: Response<Message>) {
-                        recyclerAdapter.addMessageItem(response.body()!!)
+                        getNewMessages()
                     }
 
                     override fun onFailure(call: Call<Message>, t: Throwable) {
@@ -89,34 +125,67 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     }
 
                 })
-
     }
+
+
+    private fun deleteMessage(i: String ){
+            MessageService.create().deleteMessage(i)
+                .enqueue(object : Callback<DeletedMessage>{
+                    override fun onFailure(call: Call<DeletedMessage>, t: Throwable) {
+                        Log.w("Delete",t.message)
+                    }
+
+                    override fun onResponse(call: Call<DeletedMessage>, response: Response<DeletedMessage>) {
+                        getNewMessages()
+                    }
+                })
+        }
+
+    private fun updateOldMessage(i: String, body: SendMessageBody){
+            MessageService.create().updateMessage(i ,body)
+                .enqueue(object : Callback<Message>{
+                    override fun onFailure(call: Call<Message>, t: Throwable) {
+                        Log.w("update",t.message)
+                        Toast.makeText(this@MainActivity, "update Fail", Toast.LENGTH_LONG).show()
+                    }
+
+                    override fun onResponse(call: Call<Message>, response: Response<Message>) {
+                        getNewMessages()
+                    }
+
+                })
+        }
+    fun getNewMessages(){
+
+            val service = MessageService.create()
+            val call = service.getMessages()
+
+
+            call.enqueue(object : Callback<MutableList<Message>>{
+                override fun onResponse(call: Call<MutableList<Message>>, response: Response<MutableList<Message>>) {
+                    if(response.code() == 200){
+                        recyclerAdapter.setMessageListItems(response.body()!!)
+                    }
+                }
+
+                override fun onFailure(call: Call<MutableList<Message>>, t: Throwable) {
+                    t.printStackTrace()
+                }
+            })
+        }
+
 
     override fun onResume() {
         super.onResume()
         val sharedPref = getSharedPreferences(R.string.FILE_KEY.toString(), Context.MODE_PRIVATE) ?: return
         userLogin = sharedPref.getString(R.string.LOGIN_KEY.toString(), null )
+
+
         getNewMessages()
+
     }
 
-    private fun getNewMessages(){
 
-        val service = MessageService.create()
-        val call = service.getMessages()
-
-
-        call.enqueue(object : Callback<List<Message>>{
-            override fun onResponse(call: Call<List<Message>>, response: Response<List<Message>>) {
-                if(response.code() == 200){
-                    recyclerAdapter.setMessageListItems(response.body()!!)
-                }
-            }
-
-            override fun onFailure(call: Call<List<Message>>, t: Throwable) {
-                    t.printStackTrace()
-            }
-        })
-    }
 
     override fun onBackPressed() {
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
@@ -127,43 +196,19 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.main, menu)
-        return true
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        return when (item.itemId) {
-            R.id.action_settings -> true
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
             R.id.nav_home -> {
-                // Handle the camera action
-            }
-            R.id.nav_gallery -> {
 
             }
-            R.id.nav_slideshow -> {
-
+            R.id.settings -> {
+                val intent = Intent(this, LoginAcitivty::class.java)
+                startActivity(intent)
             }
-            R.id.nav_tools -> {
 
-            }
-            R.id.nav_share -> {
-
-            }
-            R.id.nav_send -> {
-
-            }
         }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         drawerLayout.closeDrawer(GravityCompat.START)

@@ -1,17 +1,18 @@
 package com.example.chat_kotlin.recycler
 
-import android.content.Context
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import com.example.chat_kotlin.Model.Message
 import com.example.chat_kotlin.R
+import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
-class RecyclerAdapter(val context: Context) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
-    var messageList : List<Message> = listOf()
+
+class RecyclerAdapter(private val clickListener: (Message) -> Unit) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
+
+    var messageList : MutableList<Message> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 
@@ -24,33 +25,23 @@ class RecyclerAdapter(val context: Context) : RecyclerView.Adapter<RecyclerAdapt
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-
-        holder.content.text = messageList[position].content
-        holder.login.text = messageList[position].login
-        holder.date.text = messageList[position].date
-
+        holder.bind(messageList[position], clickListener)
     }
 
-    fun setMessageListItems(messageList: List<Message>){
+    fun setMessageListItems(messageList: MutableList<Message>){
         this.messageList = messageList
         notifyDataSetChanged()
     }
-    fun addMessageItem(mes: Message){
-        messageList.plusElement(mes)
-        notifyDataSetChanged()
-    }
-    fun updateMessage(message : Message){
-        messageList.forEach{
-            i -> if(i.id == message.id)  message
+
+
+
+
+    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
+        fun bind(item: Message, clickListener: (Message) -> Unit) {
+            itemView.user_content.text = item.content
+            itemView.user_login.text = item.login
+            itemView.user_date.text = item.date
+            itemView.setOnClickListener { clickListener(item)}
         }
-        notifyDataSetChanged()
-    }
-
-    class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
-        val content: TextView = itemView.findViewById(R.id.user_content)
-        val login: TextView = itemView.findViewById(R.id.user_login)
-        val date: TextView = itemView.findViewById(R.id.user_date)
-
     }
 }

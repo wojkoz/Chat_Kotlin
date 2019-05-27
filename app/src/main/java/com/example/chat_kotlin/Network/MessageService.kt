@@ -1,5 +1,6 @@
 package com.example.chat_kotlin.Network
 
+import com.example.chat_kotlin.Model.DeletedMessage
 import com.example.chat_kotlin.Model.Message
 import com.example.chat_kotlin.Model.SendMessageBody
 import retrofit2.Call
@@ -9,7 +10,7 @@ import retrofit2.http.*
 
 interface MessageService {
     @GET("messages")
-    fun getMessages() : Call<List<Message>>
+    fun getMessages() : Call<MutableList<Message>>
 
 
     @POST("message")
@@ -17,6 +18,9 @@ interface MessageService {
 
     @PUT("message/{id}")
     fun updateMessage(@Path("id") id : String, @Body m : SendMessageBody) : Call<Message>
+
+    @DELETE("message/{id}")
+    fun deleteMessage(@Path("id") id : String) : Call<DeletedMessage>
 
     companion object {
 
