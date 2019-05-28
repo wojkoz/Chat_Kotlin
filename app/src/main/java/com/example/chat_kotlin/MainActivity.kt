@@ -86,9 +86,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
                 if(data?.getStringExtra("TYPE") == "UPDATE"){
 
-                    val login = data.getStringExtra("login")
-                    val content = data.getStringExtra("content")
-                    val id = data.getStringExtra("id")
+                    val login = data.getStringExtra("l")
+                    val content = data.getStringExtra("c")
+                    val id = data.getStringExtra("i")
 
                     updateOldMessage(id, SendMessageBody(content, login))
 
