@@ -76,6 +76,12 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
     companion object{
         const val UPDATE_DELETE_MESSAGE_REQ_CODE: Int = 1
+        const val DATA_TYPE = "TYPE"
+        const val DATA_UPDATE = "UPDATE"
+        const val DATA_DELETE = "DELETE"
+        const val DATA_USER_LOGIN = "l"
+        const val DATA_USER_CONTENT = "c"
+        const val DATA_USER_ID = "id"
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -84,16 +90,16 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         if(requestCode == UPDATE_DELETE_MESSAGE_REQ_CODE){
             if(resultCode == Activity.RESULT_OK){
 
-                if(data?.getStringExtra("TYPE") == "UPDATE"){
+                if(data?.getStringExtra(DATA_TYPE) == DATA_UPDATE){
 
-                    val login = data.getStringExtra("l")
-                    val content = data.getStringExtra("c")
-                    val id = data.getStringExtra("i")
+                    val login = data.getStringExtra(DATA_USER_LOGIN)
+                    val content = data.getStringExtra(DATA_USER_CONTENT)
+                    val id = data.getStringExtra(DATA_USER_ID)
 
                     updateOldMessage(id, SendMessageBody(content, login))
 
-                }else if(data?.getStringExtra("TYPE") == "DELETE"){
-                    val id = data.getStringExtra("id")
+                }else if(data?.getStringExtra(DATA_TYPE) == DATA_DELETE){
+                    val id = data.getStringExtra(DATA_USER_ID)
                     deleteMessage(id!!)
                 }
             }

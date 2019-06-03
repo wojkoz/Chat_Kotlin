@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.chat_kotlin.MainActivity
 import com.example.chat_kotlin.R
 import kotlinx.android.synthetic.main.activity_edit_message_acitivty.*
 
@@ -37,10 +38,10 @@ class EditMessageAcitivty : AppCompatActivity() {
     private fun checkUpdate(){
         if (edit_login.text.toString() != ""  && edit_content.text.toString() != ""){
             val res = Intent()
-            res.putExtra("TYPE", "UPDATE")
-            res.putExtra("l", edit_login.text.toString())
-            res.putExtra("c", edit_content.text.toString())
-            res.putExtra("i", id)
+            res.putExtra(MainActivity.DATA_TYPE, MainActivity.DATA_UPDATE)
+            res.putExtra(MainActivity.DATA_USER_LOGIN, edit_login.text.toString())
+            res.putExtra(MainActivity.DATA_USER_CONTENT, edit_content.text.toString())
+            res.putExtra(MainActivity.DATA_USER_ID, id)
 
             setResult(Activity.RESULT_OK, res)
             finish()
@@ -50,8 +51,8 @@ class EditMessageAcitivty : AppCompatActivity() {
     private fun checkDelete(){
         if(userLogin == login){
             val res = Intent()
-            res.putExtra("TYPE", "DELETE")
-            res.putExtra("id", id)
+            res.putExtra(MainActivity.DATA_TYPE, MainActivity.DATA_DELETE)
+            res.putExtra(MainActivity.DATA_USER_ID, id)
 
             setResult(Activity.RESULT_OK, res)
             finish()
