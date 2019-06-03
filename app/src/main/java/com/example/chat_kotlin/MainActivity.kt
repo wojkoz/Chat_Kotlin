@@ -107,7 +107,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun itemClicked(Item : Message) {
-        Toast.makeText(this, "Clicked: ${Item.id}", Toast.LENGTH_LONG).show()
         val intent = Intent(this, EditMessageAcitivty::class.java)
         intent.putExtra("login", Item.login)
         intent.putExtra("content", Item.content)
