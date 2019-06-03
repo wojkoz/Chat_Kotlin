@@ -1,8 +1,8 @@
-package com.example.chat_kotlin.Network
+package com.example.chat_kotlin.network
 
-import com.example.chat_kotlin.Model.DeletedMessage
-import com.example.chat_kotlin.Model.Message
-import com.example.chat_kotlin.Model.SendMessageBody
+import com.example.chat_kotlin.model.DeletedMessage
+import com.example.chat_kotlin.model.Message
+import com.example.chat_kotlin.model.SendMessageBody
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

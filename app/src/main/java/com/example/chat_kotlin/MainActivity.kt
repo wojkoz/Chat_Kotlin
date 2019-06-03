@@ -14,24 +14,22 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.util.Log
-import android.view.Menu
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.example.chat_kotlin.Acitivites.EditMessageAcitivty
-import com.example.chat_kotlin.Acitivites.LoginAcitivty
-import com.example.chat_kotlin.Model.DeletedMessage
-import com.example.chat_kotlin.Model.Message
-import com.example.chat_kotlin.Model.SendMessageBody
-import com.example.chat_kotlin.Network.MessageService
+import com.example.chat_kotlin.activity.EditMessageAcitivty
+import com.example.chat_kotlin.activity.LoginActivity
+import com.example.chat_kotlin.model.DeletedMessage
+import com.example.chat_kotlin.model.Message
+import com.example.chat_kotlin.model.SendMessageBody
+import com.example.chat_kotlin.network.MessageService
 import com.example.chat_kotlin.recycler.RecyclerAdapter
 import kotlinx.android.synthetic.main.content_main.*
 import retrofit2.*
-import java.io.Serializable
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
     private var userLogin: String? = ""
-    lateinit var recyclerView: RecyclerView
+    private lateinit var recyclerView: RecyclerView
     lateinit var recyclerAdapter: RecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,7 +52,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         userLogin = sharedPref.getString(R.string.LOGIN_KEY.toString(), null )
 
         if(userLogin==null){
-            val intent = Intent(this, LoginAcitivty::class.java)
+            val intent = Intent(this, LoginActivity::class.java)
             startActivity(intent)
         }
 
@@ -214,7 +212,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
             R.id.settings -> {
-                val intent = Intent(this, LoginAcitivty::class.java)
+                val intent = Intent(this, LoginActivity::class.java)
                 startActivity(intent)
             }
 

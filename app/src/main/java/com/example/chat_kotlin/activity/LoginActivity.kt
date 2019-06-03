@@ -1,4 +1,4 @@
-package com.example.chat_kotlin.Acitivites
+package com.example.chat_kotlin.activity
 
 import android.content.Context
 import android.support.v7.app.AppCompatActivity
@@ -6,7 +6,7 @@ import android.os.Bundle
 import com.example.chat_kotlin.R
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginAcitivty : AppCompatActivity() {
+class LoginActivity : AppCompatActivity() {
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

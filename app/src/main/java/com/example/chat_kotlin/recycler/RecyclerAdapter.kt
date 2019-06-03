@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.chat_kotlin.Model.Message
+import com.example.chat_kotlin.model.Message
 import com.example.chat_kotlin.R
 import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
@@ -12,7 +12,7 @@ import kotlinx.android.synthetic.main.recyclerview_item.view.*
 
 class RecyclerAdapter(private val clickListener: (Message) -> Unit) : RecyclerView.Adapter<RecyclerAdapter.MyViewHolder>() {
 
-    var messageList : MutableList<Message> = mutableListOf()
+    private var messageList : MutableList<Message> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
 

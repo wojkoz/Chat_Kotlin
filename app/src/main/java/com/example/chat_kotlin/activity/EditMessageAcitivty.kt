@@ -1,4 +1,4 @@
-package com.example.chat_kotlin.Acitivites
+package com.example.chat_kotlin.activity
 
 
 import android.app.Activity
