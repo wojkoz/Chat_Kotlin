@@ -1,5 +1,5 @@
 package com.example.chat_kotlin
-
+//Wojciech Koziol
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
